@@ -7,7 +7,10 @@ public class Main {
 		
 		LoginWindow loginWindow = new LoginWindow();
 		loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		loginWindow.setLocationRelativeTo(null);
 		loginWindow.setVisible(true);
+		
+		
 	}
 
 }

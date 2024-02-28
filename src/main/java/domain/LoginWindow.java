@@ -5,6 +5,8 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import javafx.application.Application;
@@ -12,6 +14,8 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginWindow extends JFrame {
 	
@@ -39,7 +43,7 @@ public class LoginWindow extends JFrame {
 	JLabel labelPassword = new JLabel("Password:");
 	labelPassword.setBounds(100,230,150,120);
 	labelPassword.setFont(new Font("Arial", Font.BOLD, 20));
-	JTextField passwordFieldText = new JTextField("");
+	JPasswordField passwordFieldText = new JPasswordField("");
 	passwordFieldText.setBounds(240,273,250,35);
 	add(passwordFieldText);
 	add(labelPassword);
@@ -57,9 +61,19 @@ public class LoginWindow extends JFrame {
 	signUp.setBounds(263, 600, 200, 40);
 	add(signUp);
 	
-	
+	//Action that opens the Registration Form
+    signUp.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	
+    		RegisterWindow registerWindow = new RegisterWindow();
+    		registerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    		registerWindow.setLocationRelativeTo(null);
+    		registerWindow.setVisible(true);
+    		dispose();
+        	
+        }
+    });
 	
 	}
-
-
 }
