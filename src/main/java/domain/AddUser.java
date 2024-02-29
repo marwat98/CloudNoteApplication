@@ -1,5 +1,7 @@
 package domain;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,12 +11,12 @@ public class AddUser {
 	@Id
 	@GeneratedValue
 	private long id;
+	
 	private String login;
 	private String password;
 	private String email;
-	private String date;
-	private boolean male;
-	private boolean female;
+	private Date sqlDate;
+	private String gender;
 
 	public long getId() {
 		return id;
@@ -48,28 +50,22 @@ public class AddUser {
 		this.email = email;
 	}
 
-	public String getDate() {
-		return date;
+	public Date getDate() {
+		return sqlDate;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setDate(java.util.Date sqlDate) {
+		this.sqlDate = (Date) sqlDate;
 	}
 
-	public boolean isMale() {
-		return male;
+	public String isGender() {
+		return gender;
 	}
 
-	public void setMale(boolean male) {
-		this.male = male;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
-	public boolean isFemale() {
-		return female;
-	}
 
-	public void setFemale(boolean female) {
-		this.female = female;
-	}
 
 }

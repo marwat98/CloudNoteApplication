@@ -3,10 +3,16 @@ package domain;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
@@ -15,35 +21,38 @@ import javax.swing.SpinnerDateModel;
 
 public class RegisterWindow extends JFrame {
 
-	public static JLabel labelAddPassword, registerLabel, labelAddLogin, labelAddAgainPassword, addBirthDate, labelAddEmail, addSex;
-	public static JTextField addLogin,addEmail;
+	public static JFrame frame;
+	public static JLabel labelAddPassword, registerLabel, labelAddLogin, labelAddAgainPassword, addBirthDate,
+			labelAddEmail, addSex;
+	public static JTextField addLogin, addEmail;
 	public static JPasswordField addPassword, addAgainPassword;
-	public static JRadioButton male,female;
+	public static JRadioButton male, female;
 	public static JButton register, back;
+	public static AddUser user;
 
 	public RegisterWindow() {
 
 		setTitle("ToDoNote");
 		setSize(700, 700);
 		setLayout(null);
-		
+
 		back = new JButton("Back");
-		back.setBounds(0,0,120,30);
+		back.setBounds(0, 0, 120, 30);
 		add(back);
-		
-	    back.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	        	
-	        	LoginWindow loginWindow = new LoginWindow();
-	    		loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    		loginWindow.setLocationRelativeTo(null);
-	    		loginWindow.setVisible(true);
-	    		dispose();
-	        	
-	        }
-	    });
-		
+
+		back.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				LoginWindow loginWindow = new LoginWindow();
+				loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				loginWindow.setLocationRelativeTo(null);
+				loginWindow.setVisible(true);
+				dispose();
+
+			}
+		});
 
 		registerLabel = new JLabel("Fill out the form below to create an account");
 		registerLabel.setBounds(200, 0, 400, 200);
@@ -91,12 +100,12 @@ public class RegisterWindow extends JFrame {
 		addBirthDate.setBounds(10, 325, 150, 150);
 		addBirthDate.setFont(new Font("Arial", Font.BOLD, 15));
 		JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
-		dateSpinner.setBounds(160, 380, 400, 35);
-		dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy"));
-		dateSpinner.setFont(new Font("Arial", Font.BOLD, 15));
+	    dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd"));
+	    dateSpinner.setBounds(160, 380, 150, 25); 
+	    dateSpinner.setFont(new Font("Arial", Font.BOLD, 15)); 
 		add(dateSpinner);
 		add(addBirthDate);
-		
+
 		// Add Sex
 		addSex = new JLabel("Sex:");
 		addSex.setBounds(10, 405, 150, 150);
@@ -108,10 +117,67 @@ public class RegisterWindow extends JFrame {
 		add(addSex);
 		add(male);
 		add(female);
-		
-		//Add button register
+
+		// Add button register
 		register = new JButton("Register");
 		register.setBounds(150, 550, 400, 50);
 		add(register);
+
+		register.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String login = addLogin.getText();
+				loginRegister(login);
+				String password = new String(addPassword.getPassword());
+				String password2 = new String(addAgainPassword.getPassword());
+				if (password.equals(password2)) {
+					passwordRegister(password);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Passwords aren't identical", "Adding password failed ",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+				String email = addEmail.getText();
+				emailRegister(email);
+				Date utilDate = (Date) dateSpinner.getValue();
+				java.util.Date utilDate1 = (java.util.Date) dateSpinner.getValue();
+				dateRegister(utilDate1);
+				String gender = male.isSelected() ? "Male" : "Female";
+								
+
+			}
+		});
+
 	}
+
+	public void loginRegister(String login) {
+		user = new AddUser();
+		user.setLogin(login);
+	}
+
+	public void passwordRegister(String password) {
+		user = new AddUser();
+		user.setPassword(password);
+	}
+
+	public void emailRegister(String email) {
+		user = new AddUser();
+		user.setEmail(email);
+	}
+
+	public void dateRegister(java.util.Date sqlDate) {
+		user = new AddUser();
+		user.setDate(sqlDate);
+	}
+	
+	public void checkGender(String gender) {
+		user = new AddUser();
+		user.setGender(gender);
+	}
+	
+	
+	public boolean isMaleSelected() {
+	        return male.isSelected();
+	    }
+
 }
+
