@@ -3,7 +3,7 @@ package domain;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 import javax.persistence.EntityManager;
@@ -28,13 +28,19 @@ public class RegisterWindow extends JFrame {
 	public static JPasswordField addPassword, addAgainPassword;
 	public static JRadioButton male, female;
 	public static JButton register, back;
+	public static JSpinner dateSpinner;
+	public static EntityManagerFactory entityManagerFactory;
+	public static EntityManager entityManager;
 	public static AddUser user;
 
-	public RegisterWindow() {
+	public void registerWindowSettings() {
 
 		setTitle("ToDoNote");
 		setSize(700, 700);
 		setLayout(null);
+	}
+
+	public void back() {
 
 		back = new JButton("Back");
 		back.setBounds(0, 0, 120, 30);
@@ -53,13 +59,18 @@ public class RegisterWindow extends JFrame {
 
 			}
 		});
+	}
 
+	public void registerLabel() {
+		
 		registerLabel = new JLabel("Fill out the form below to create an account");
 		registerLabel.setBounds(200, 0, 400, 200);
 		registerLabel.setFont(new Font("Arial", Font.BOLD, 15));
 		add(registerLabel);
+	}
+	// Create login
+	public void labelAddLogin() {
 
-		// Create login
 		labelAddLogin = new JLabel("Add Login:");
 		labelAddLogin.setBounds(10, 80, 150, 150);
 		labelAddLogin.setFont(new Font("Arial", Font.BOLD, 15));
@@ -67,8 +78,10 @@ public class RegisterWindow extends JFrame {
 		addLogin.setBounds(160, 140, 400, 35);
 		add(addLogin);
 		add(labelAddLogin);
+	}
+	// Create password
+	public void labelAddPassword() {
 
-		// Create password
 		labelAddPassword = new JLabel("Add Password:");
 		labelAddPassword.setBounds(10, 145, 150, 150);
 		labelAddPassword.setFont(new Font("Arial", Font.BOLD, 15));
@@ -76,8 +89,10 @@ public class RegisterWindow extends JFrame {
 		addPassword.setBounds(160, 200, 400, 35);
 		add(addPassword);
 		add(labelAddPassword);
+	}
+	// Add again password
+	public void againAddPassword() {
 
-		// Add again password
 		labelAddAgainPassword = new JLabel("Again password:");
 		labelAddAgainPassword.setBounds(10, 205, 150, 150);
 		labelAddAgainPassword.setFont(new Font("Arial", Font.BOLD, 15));
@@ -85,8 +100,10 @@ public class RegisterWindow extends JFrame {
 		addAgainPassword.setBounds(160, 260, 400, 35);
 		add(addAgainPassword);
 		add(labelAddAgainPassword);
+	}
+	// Add Email
+	public void labelAddEmail() {
 
-		// Add Email
 		labelAddEmail = new JLabel("Add Email:");
 		labelAddEmail.setBounds(10, 265, 150, 150);
 		labelAddEmail.setFont(new Font("Arial", Font.BOLD, 15));
@@ -94,19 +111,24 @@ public class RegisterWindow extends JFrame {
 		addEmail.setBounds(160, 320, 400, 35);
 		add(addEmail);
 		add(labelAddEmail);
+	}
+	// Add birth date
+	public void birthDate() {
 
-		// Add birth date
 		addBirthDate = new JLabel("Birth date:");
 		addBirthDate.setBounds(10, 325, 150, 150);
 		addBirthDate.setFont(new Font("Arial", Font.BOLD, 15));
-		JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
-	    dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd"));
-	    dateSpinner.setBounds(160, 380, 150, 25); 
-	    dateSpinner.setFont(new Font("Arial", Font.BOLD, 15)); 
+		dateSpinner = new JSpinner(new SpinnerDateModel());
+		dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd"));
+		dateSpinner.setBounds(160, 380, 150, 25);
+		dateSpinner.setFont(new Font("Arial", Font.BOLD, 15));
 		add(dateSpinner);
 		add(addBirthDate);
+	}
 
-		// Add Sex
+	// Add user sex
+	public void gender() {
+
 		addSex = new JLabel("Sex:");
 		addSex.setBounds(10, 405, 150, 150);
 		addSex.setFont(new Font("Arial", Font.BOLD, 15));
@@ -117,17 +139,22 @@ public class RegisterWindow extends JFrame {
 		add(addSex);
 		add(male);
 		add(female);
+	}
 
-		// Add button register
+	// Add button register
+	public void registerButton() {
+
 		register = new JButton("Register");
 		register.setBounds(150, 550, 400, 50);
 		add(register);
 
 		register.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String login = addLogin.getText();
 				loginRegister(login);
+
 				String password = new String(addPassword.getPassword());
 				String password2 = new String(addAgainPassword.getPassword());
 				if (password.equals(password2)) {
@@ -136,17 +163,39 @@ public class RegisterWindow extends JFrame {
 					JOptionPane.showMessageDialog(frame, "Passwords aren't identical", "Adding password failed ",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
+
 				String email = addEmail.getText();
 				emailRegister(email);
-				Date utilDate = (Date) dateSpinner.getValue();
-				java.util.Date utilDate1 = (java.util.Date) dateSpinner.getValue();
-				dateRegister(utilDate1);
-				String gender = male.isSelected() ? "Male" : "Female";
-								
 
+				java.util.Date utilDate = (java.util.Date) dateSpinner.getValue();
+				java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+				dateRegister(sqlDate);
+
+				String gender = male.isSelected() ? "Male" : "Female";
+				checkGender(gender);
+
+				try {
+
+					entityManagerFactory = Persistence.createEntityManagerFactory("myToDo");
+					entityManager = entityManagerFactory.createEntityManager();
+					entityManager.getTransaction().begin();
+					entityManager.persist(user);
+					entityManager.getTransaction().commit();
+					JOptionPane.showMessageDialog(frame, "User registered successfully", "Registration Success",
+							JOptionPane.INFORMATION_MESSAGE);
+
+				} catch (Exception ex) {
+
+					entityManager.getTransaction().rollback();
+					JOptionPane.showMessageDialog(frame, "Registration failed: " + ex.getMessage(),
+							"Registration Failed", JOptionPane.ERROR_MESSAGE);
+				} finally {
+
+					entityManager.close();
+					entityManager.close();
+				}
 			}
 		});
-
 	}
 
 	public void loginRegister(String login) {
@@ -164,20 +213,18 @@ public class RegisterWindow extends JFrame {
 		user.setEmail(email);
 	}
 
-	public void dateRegister(java.util.Date sqlDate) {
+	public void dateRegister(java.sql.Date sqlDate) {
 		user = new AddUser();
 		user.setDate(sqlDate);
 	}
-	
+
 	public void checkGender(String gender) {
 		user = new AddUser();
 		user.setGender(gender);
 	}
-	
-	
+
 	public boolean isMaleSelected() {
-	        return male.isSelected();
-	    }
+		return male.isSelected();
+	}
 
 }
-

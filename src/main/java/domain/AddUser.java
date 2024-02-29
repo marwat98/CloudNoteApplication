@@ -15,7 +15,7 @@ public class AddUser {
 	private String login;
 	private String password;
 	private String email;
-	private Date sqlDate;
+	private java.sql.Date birthDate;
 	private String gender;
 
 	public long getId() {
@@ -51,11 +51,11 @@ public class AddUser {
 	}
 
 	public Date getDate() {
-		return sqlDate;
+		return birthDate;
 	}
 
-	public void setDate(java.util.Date sqlDate) {
-		this.sqlDate = (Date) sqlDate;
+	public void setDate(java.sql.Date birthDate) {
+	    this.birthDate = birthDate;
 	}
 
 	public String isGender() {
