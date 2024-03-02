@@ -12,7 +12,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		LoginWindow loginWindow = new LoginWindow();
-		loginWindow.loginWindowSettings();
+		loginWindow.windowSettings();
 		loginWindow.labelToDo();
 		loginWindow.labelLogin();
 		loginWindow.labelPassword();

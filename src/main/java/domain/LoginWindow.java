@@ -2,12 +2,18 @@ package domain;
 
 import java.awt.Font;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -18,8 +24,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginWindow extends JFrame {
+	
+	private static EntityManagerFactory entityManagerFactory;
+	private static EntityManager entityManager;
+	private static AddUser user;
+	private static JTextField loginFieldText;
 
-    public void loginWindowSettings() {
+    public void windowSettings() {
     	setTitle("ToDoNote");
     	setSize(700,700);
     	setLayout(null);
@@ -36,7 +47,7 @@ public class LoginWindow extends JFrame {
     	JLabel labelLogin = new JLabel("Login:");
     	labelLogin.setBounds(100,140,150,150);
     	labelLogin.setFont(new Font("Arial", Font.BOLD, 20));
-    	JTextField loginFieldText = new JTextField("");
+    	loginFieldText = new JTextField("");
     	loginFieldText.setBounds(240,198,250,35);
     	add(loginFieldText);
     	add(labelLogin);
@@ -56,7 +67,17 @@ public class LoginWindow extends JFrame {
     	JButton signIn = new JButton("Sign in");
     	signIn.setBounds(263, 330, 200, 40);
     	add(signIn);
-    }
+    	
+    	signIn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				checkUserInDataBase(loginFieldText);
+			}
+    	});
+   
+    	}
+
     // Information about register possibility
     public void registerInformation() {
     	JLabel registerInformation = new JLabel("If you havent't account you can register click on button");
@@ -75,22 +96,39 @@ public class LoginWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	
         		RegisterWindow registerWindow = new RegisterWindow();
-        		registerWindow.registerWindowSettings();
+        		registerWindow.windowSettings();
         		registerWindow.back();
         		registerWindow.registerLabel();
         		registerWindow.labelAddLogin();
+        		registerWindow.informationAboutLogin();
         		registerWindow.labelAddPassword();
         		registerWindow.againAddPassword();
+        		registerWindow.informationAboutPassword();
         		registerWindow.labelAddEmail();
         		registerWindow.birthDate();
         		registerWindow.gender();
         		registerWindow.registerButton();
         		registerWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         		registerWindow.setLocationRelativeTo(null);
-        		registerWindow.setVisible(true);	
-        		dispose();
+        		registerWindow.setVisible(true);
+				dispose();
             	
             	}
         	});
     	}
+    private void checkUserInDataBase(JTextField loginField) {
+        String login = loginField.getText(); 
+        Query query = entityManager.createQuery("SELECT e FROM AddUser e WHERE e.login = :login");
+        query.setParameter("login", login);
+        try {
+            AddUser user = (AddUser) query.getSingleResult();
+            AplicationLabel aplication = new AplicationLabel();  
+            aplication.windowSettings();
+        } catch (NoResultException nre) {
+        	JOptionPane.showMessageDialog(null, "Użytkownik nie istnieje.", "Błąd logowania", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Wystąpił problem podczas logowania.", "Error 1", JOptionPane.ERROR_MESSAGE);
+        } 
     }
+
+ }
