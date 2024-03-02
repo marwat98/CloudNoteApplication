@@ -152,6 +152,7 @@ public class RegisterWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				user = new AddUser();
 				String login = addLogin.getText();
 				loginRegister(login);
 
@@ -191,7 +192,7 @@ public class RegisterWindow extends JFrame {
 							"Registration Failed", JOptionPane.ERROR_MESSAGE);
 				} finally {
 
-					entityManager.close();
+					entityManagerFactory.close();
 					entityManager.close();
 				}
 			}
@@ -199,27 +200,22 @@ public class RegisterWindow extends JFrame {
 	}
 
 	public void loginRegister(String login) {
-		user = new AddUser();
 		user.setLogin(login);
 	}
 
 	public void passwordRegister(String password) {
-		user = new AddUser();
 		user.setPassword(password);
 	}
 
 	public void emailRegister(String email) {
-		user = new AddUser();
 		user.setEmail(email);
 	}
 
 	public void dateRegister(java.sql.Date sqlDate) {
-		user = new AddUser();
 		user.setDate(sqlDate);
 	}
 
 	public void checkGender(String gender) {
-		user = new AddUser();
 		user.setGender(gender);
 	}
 
