@@ -29,13 +29,20 @@ public class LoginWindow extends JFrame {
 	private static EntityManager entityManager;
 	private static AddUser user;
 	private static JTextField loginFieldText;
-
-    public void windowSettings() {
+	private static JPasswordField passwordFieldText;
+	
+	//method which connection with data base
+    public void entityManagerFactory() {
+    	entityManagerFactory = Persistence.createEntityManagerFactory("myToDo");
+		entityManager = entityManagerFactory.createEntityManager();
+    }
+    //Size setting window
+    public void loginWindowSettings() {
     	setTitle("ToDoNote");
     	setSize(700,700);
     	setLayout(null);
     }
-    
+    // Name application
     public void labelToDo() {
     	JLabel toDo = new JLabel("ToDoNote");
     	toDo.setBounds(240,5,300,200);
@@ -57,7 +64,7 @@ public class LoginWindow extends JFrame {
     	JLabel labelPassword = new JLabel("Password:");
     	labelPassword.setBounds(100,230,150,120);
     	labelPassword.setFont(new Font("Arial", Font.BOLD, 20));
-    	JPasswordField passwordFieldText = new JPasswordField("");
+    	passwordFieldText = new JPasswordField("");
     	passwordFieldText.setBounds(240,273,250,35);
     	add(passwordFieldText);
     	add(labelPassword);
@@ -69,14 +76,12 @@ public class LoginWindow extends JFrame {
     	add(signIn);
     	
     	signIn.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				checkUserInDataBase(loginFieldText);
+				checkUserInDataBase(loginFieldText,passwordFieldText);
 			}
     	});
-   
-    	}
+    }
 
     // Information about register possibility
     public void registerInformation() {
@@ -94,9 +99,8 @@ public class LoginWindow extends JFrame {
         signUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	
         		RegisterWindow registerWindow = new RegisterWindow();
-        		registerWindow.windowSettings();
+        		registerWindow.registerWindowSettings();
         		registerWindow.back();
         		registerWindow.registerLabel();
         		registerWindow.labelAddLogin();
@@ -112,23 +116,36 @@ public class LoginWindow extends JFrame {
         		registerWindow.setLocationRelativeTo(null);
         		registerWindow.setVisible(true);
 				dispose();
-            	
             	}
         	});
     	}
-    private void checkUserInDataBase(JTextField loginField) {
-        String login = loginField.getText(); 
-        Query query = entityManager.createQuery("SELECT e FROM AddUser e WHERE e.login = :login");
+    public void checkUserInDataBase(JTextField loginField, JPasswordField passwordField) {    	
+    	entityManagerFactory();		
+        String login = loginField.getText();
+        String password = new String(passwordField.getPassword()); 
+        Query query = entityManager.createQuery("SELECT e FROM AddUser e WHERE e.login = :login AND e.password = :password");
         query.setParameter("login", login);
+        query.setParameter("password", password); 
+        
         try {
             AddUser user = (AddUser) query.getSingleResult();
-            AplicationLabel aplication = new AplicationLabel();  
-            aplication.windowSettings();
+            ApplicationWindow application = new ApplicationWindow();
+            application.applicationWindowSettings();
+            application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            application.setLocationRelativeTo(null);
+            application.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Logging correct", "Logging", JOptionPane.ERROR_MESSAGE);
+        	dispose();  
         } catch (NoResultException nre) {
-        	JOptionPane.showMessageDialog(null, "Użytkownik nie istnieje.", "Błąd logowania", JOptionPane.ERROR_MESSAGE);
+        	nre.printStackTrace();
+            JOptionPane.showMessageDialog(null, "User doesn't exist", "Logging error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Wystąpił problem podczas logowania.", "Error 1", JOptionPane.ERROR_MESSAGE);
-        } 
+        	e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "There was a problem during login", "Error 1", JOptionPane.ERROR_MESSAGE);
+        } finally {        	
+        	entityManagerFactory.close();
+        	entityManager.close();
+        }
     }
 
  }
