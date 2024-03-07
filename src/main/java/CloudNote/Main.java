@@ -1,4 +1,4 @@
-package domain;
+package CloudNote;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,6 +22,8 @@ public class Main {
 		loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		loginWindow.setLocationRelativeTo(null);
 		loginWindow.setVisible(true);
+		
+		
 		
 		}
 

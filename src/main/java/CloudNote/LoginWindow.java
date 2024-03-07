@@ -1,4 +1,4 @@
-package domain;
+package CloudNote;
 
 import java.awt.Font;
 
@@ -38,13 +38,13 @@ public class LoginWindow extends JFrame {
     }
     //Size setting window
     public void loginWindowSettings() {
-    	setTitle("ToDoNote");
+    	setTitle("CloudNote");
     	setSize(700,700);
     	setLayout(null);
     }
     // Name application
     public void labelToDo() {
-    	JLabel toDo = new JLabel("ToDoNote");
+    	JLabel toDo = new JLabel("CloudNote");
     	toDo.setBounds(240,5,300,200);
     	toDo.setFont(new Font("Arial", Font.BOLD, 50));
     	add(toDo);
@@ -76,7 +76,6 @@ public class LoginWindow extends JFrame {
     	add(signIn);
     	
     	signIn.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				checkUserInDataBase(loginFieldText,passwordFieldText);
 			}
@@ -97,7 +96,6 @@ public class LoginWindow extends JFrame {
     	
     	//Action that opens the Registration Form
         signUp.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
         		RegisterWindow registerWindow = new RegisterWindow();
         		registerWindow.registerWindowSettings();
@@ -120,7 +118,8 @@ public class LoginWindow extends JFrame {
         	});
     	}
     public void checkUserInDataBase(JTextField loginField, JPasswordField passwordField) {    	
-    	entityManagerFactory();		
+    	entityManagerFactory = Persistence.createEntityManagerFactory("myToDo");
+		entityManager = entityManagerFactory.createEntityManager();	
         String login = loginField.getText();
         String password = new String(passwordField.getPassword()); 
         Query query = entityManager.createQuery("SELECT e FROM AddUser e WHERE e.login = :login AND e.password = :password");

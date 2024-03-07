@@ -1,4 +1,4 @@
-package domain;
+package CloudNote;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -35,7 +35,7 @@ public class RegisterWindow extends JFrame {
 	
 	// Size settings register window
 	public void registerWindowSettings() {
-    	setTitle("ToDoNote");
+		setTitle("CloudNote");
     	setSize(700,700);
     	setLayout(null);
 	}
@@ -46,7 +46,6 @@ public class RegisterWindow extends JFrame {
 		add(back);
 
 		back.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				LoginWindow loginWindow = new LoginWindow();
 				loginWindow.loginWindowSettings();
@@ -154,7 +153,6 @@ public class RegisterWindow extends JFrame {
 		add(register);
 
 		register.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				user = new AddUser();		
 				try {

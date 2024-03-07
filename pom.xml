@@ -43,7 +43,17 @@
     <artifactId>junit-jupiter-engine</artifactId>
     <version>5.10.2</version>
     <scope>test</scope>
-	</dependency>
+    </dependency>
+       
+  	<dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+		<version>3.14.0</version>
+    </dependency>
   </dependencies>
   
+  <properties>
+    <maven.compiler.source>19</maven.compiler.source>
+    <maven.compiler.target>19</maven.compiler.target>
+  </properties>
 </project>

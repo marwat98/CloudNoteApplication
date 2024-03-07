@@ -1,4 +1,4 @@
-package domain;
+package CloudNote;
 
 import java.sql.Date;
 
