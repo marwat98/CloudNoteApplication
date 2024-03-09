@@ -153,6 +153,7 @@ public class RegisterWindow extends JFrame {
 		add(register);
 
 		register.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				user = new AddUser();		
 				try {
@@ -175,7 +176,8 @@ public class RegisterWindow extends JFrame {
 				String gender = male.isSelected() ? "Male" : "Female";
 				checkGender(gender);
 				
-				userRegister();				
+				userRegister();	
+				
 				} catch(Exception ch) {
 					JOptionPane.showMessageDialog(null, ch.getMessage(), "Validation Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -237,8 +239,8 @@ public class RegisterWindow extends JFrame {
     // method which add user to data base
     private void userRegister() throws Exception {
     	try {
-    		LoginWindow loginWindow = new LoginWindow();
-    		loginWindow.entityManagerFactory();
+        	entityManagerFactory = Persistence.createEntityManagerFactory("myToDo");
+    		entityManager = entityManagerFactory.createEntityManager();
 			entityManager.getTransaction().begin();
 			entityManager.persist(user);
 			entityManager.getTransaction().commit();

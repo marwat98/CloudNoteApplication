@@ -31,11 +31,6 @@ public class LoginWindow extends JFrame {
 	private static JTextField loginFieldText;
 	private static JPasswordField passwordFieldText;
 	
-	//method which connection with data base
-    public void entityManagerFactory() {
-    	entityManagerFactory = Persistence.createEntityManagerFactory("myToDo");
-		entityManager = entityManagerFactory.createEntityManager();
-    }
     //Size setting window
     public void loginWindowSettings() {
     	setTitle("CloudNote");
@@ -76,8 +71,25 @@ public class LoginWindow extends JFrame {
     	add(signIn);
     	
     	signIn.addActionListener(new ActionListener() {
+    		@Override
 			public void actionPerformed(ActionEvent arg0) {
 				checkUserInDataBase(loginFieldText,passwordFieldText);
+				
+				try {
+				ApplicationWindow app = new ApplicationWindow();
+				app.applicationWindowSettings();
+				app.showUserLogin(loginFieldText);
+				app.addNote();
+				app.checkNote();
+				app.shareNote();
+				app.logOutToMainCloudWindow();
+				app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				app.setLocationRelativeTo(null);
+				app.setVisible(true);
+				
+				} catch (Exception s) {
+					System.out.println(s.getMessage());
+				}
 			}
     	});
     }
@@ -96,6 +108,7 @@ public class LoginWindow extends JFrame {
     	
     	//Action that opens the Registration Form
         signUp.addActionListener(new ActionListener() {
+        	@Override
             public void actionPerformed(ActionEvent e) {
         		RegisterWindow registerWindow = new RegisterWindow();
         		registerWindow.registerWindowSettings();
@@ -119,7 +132,7 @@ public class LoginWindow extends JFrame {
     	}
     public void checkUserInDataBase(JTextField loginField, JPasswordField passwordField) {    	
     	entityManagerFactory = Persistence.createEntityManagerFactory("myToDo");
-		entityManager = entityManagerFactory.createEntityManager();	
+		entityManager = entityManagerFactory.createEntityManager();
         String login = loginField.getText();
         String password = new String(passwordField.getPassword()); 
         Query query = entityManager.createQuery("SELECT e FROM AddUser e WHERE e.login = :login AND e.password = :password");
