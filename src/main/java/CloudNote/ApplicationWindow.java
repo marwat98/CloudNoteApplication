@@ -15,18 +15,18 @@ public class ApplicationWindow extends JFrame {
 	private static JLabel showUser;
 
 	
-	public static void main (String [] args) {
-		ApplicationWindow app = new ApplicationWindow();
-		app.applicationWindowSettings();
-		//app.showUserLogin(loginFieldText);
-		app.addNote();
-		app.checkNote();
-		app.shareNote();
-		app.logOutToMainCloudWindow();
-		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		app.setLocationRelativeTo(null);
-		app.setVisible(true);
-	}
+//	public static void main (String [] args) {
+//		ApplicationWindow app = new ApplicationWindow();
+//		app.applicationWindowSettings();
+//		//app.showUserLogin(loginFieldText);
+//		app.addNote();
+//		app.checkNote();
+//		app.shareNote();
+//		app.logOutToMainCloudWindow();
+//		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		app.setLocationRelativeTo(null);
+//		app.setVisible(true);
+//	}
 	
 	public void showUserLogin(JTextField loginFieldText) {
 		
@@ -34,13 +34,11 @@ public class ApplicationWindow extends JFrame {
 		AddUser user = userService.getUserByLogin(loginFieldText);
 		
 		if(user != null) {
-			showUser = new JLabel("Hello " + user.getLogin());
+			showUser = new JLabel("Login: " + user.getLogin());
 		} else {
 			showUser = new JLabel("Unknow User");
 		}
-
-		showUser.setFont(new Font("Arial", Font.BOLD, 30));
-		showUser.setBounds(250,50,500,50);
+		showUser.setBounds(550,0,500,50);
 		add(showUser);
 	}
 	
